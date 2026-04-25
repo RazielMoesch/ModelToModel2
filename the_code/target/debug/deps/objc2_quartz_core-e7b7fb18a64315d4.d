@@ -1,0 +1,8 @@
+/Users/razielmoesch/Desktop/RazielMoeschWebsite/ModelToModel2/the_code/target/debug/deps/objc2_quartz_core-e7b7fb18a64315d4.d: /Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/lib.rs /Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/generated/mod.rs /Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/generated/CALayer.rs /Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/generated/CAMetalLayer.rs
+
+/Users/razielmoesch/Desktop/RazielMoeschWebsite/ModelToModel2/the_code/target/debug/deps/libobjc2_quartz_core-e7b7fb18a64315d4.rmeta: /Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/lib.rs /Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/generated/mod.rs /Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/generated/CALayer.rs /Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/generated/CAMetalLayer.rs
+
+/Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/lib.rs:
+/Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/generated/mod.rs:
+/Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/generated/CALayer.rs:
+/Users/razielmoesch/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-quartz-core-0.3.2/src/generated/CAMetalLayer.rs:
