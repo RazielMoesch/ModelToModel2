@@ -134,10 +134,10 @@ impl Render {
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
         depth_texture_view: &wgpu::TextureView,
-        bg_0: wgpu::BindGroup,
-        bg_1: wgpu::BindGroup,
-        bg_2: wgpu::BindGroup,
-        index_buffer: wgpu::Buffer,
+        bg_0: &wgpu::BindGroup,
+        bg_1: &wgpu::BindGroup,
+        bg_2: &wgpu::BindGroup,
+        index_buffer: &wgpu::Buffer,
         num_indices: u32
     ) {
 
@@ -180,9 +180,9 @@ impl Render {
 
 
             pass.set_pipeline(&self.pipeline);
-            pass.set_bind_group(0, Some(&bg_0), &[]);
-            pass.set_bind_group(1, Some(&bg_1), &[]);
-            pass.set_bind_group(2, Some(&bg_2), &[]);
+            pass.set_bind_group(0, Some(bg_0), &[]);
+            pass.set_bind_group(1, Some(bg_1), &[]);
+            pass.set_bind_group(2, Some(bg_2), &[]);
             pass.set_index_buffer(index_buffer.slice(..), wgpu::IndexFormat::Uint32);
             pass.draw_indexed(0..num_indices, 0, 0..1);
 

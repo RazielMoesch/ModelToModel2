@@ -1,0 +1,13 @@
+C:\Users\razie\OneDrive\Desktop\ModelToModel\modeltomodel2\the_code\target\debug\deps\qoi-e1aef71066c3a507.d: C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\lib.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\decode.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\encode.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\error.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\header.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\pixel.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\types.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\utils.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\consts.rs
+
+C:\Users\razie\OneDrive\Desktop\ModelToModel\modeltomodel2\the_code\target\debug\deps\libqoi-e1aef71066c3a507.rmeta: C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\lib.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\decode.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\encode.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\error.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\header.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\pixel.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\types.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\utils.rs C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\consts.rs
+
+C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\lib.rs:
+C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\decode.rs:
+C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\encode.rs:
+C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\error.rs:
+C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\header.rs:
+C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\pixel.rs:
+C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\types.rs:
+C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\utils.rs:
+C:\Users\razie\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\qoi-0.4.1\src\consts.rs:
