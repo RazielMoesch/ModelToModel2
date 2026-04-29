@@ -10,7 +10,7 @@ struct Vertex { // 32
 
 };
 
-struct UV { 16
+struct UV { //16
 
     uv: vec2<f32>, // 8
     _pad1: vec2<f32> // 8
@@ -82,8 +82,8 @@ fn fs( in: VertexOutput ) -> @location(0) vec4<f32> {
     let normal = normalize(in.normal);
 
 
-    let brightness = clamp(dot(normal, -normalize(uniforms.light_source)), 0.1, 1.0);
+    // let brightness = clamp(dot(normal, -normalize(uniforms.light_source)), 0.1, 1.0);
 
 
-    return vec4<f32>(color * brightness, color.a);
+    return vec4<f32>(color.xyz, color.a);
 }

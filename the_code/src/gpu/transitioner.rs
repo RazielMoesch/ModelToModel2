@@ -1,5 +1,7 @@
 
 
+
+
 use crate::gpu::{render::Render, vertex_creator::VertexCreator};
 use crate::gpu::resources::{RenderUniforms, UV, Vertex, VertexCreatorUniforms};
 use crate::gpu::utils::{buffer_binding_entry, create_bind_group, create_buffer, create_buffer_init, sampler_binding_entry, texture_binding_entry};
@@ -7,30 +9,30 @@ use crate::gpu::utils::{buffer_binding_entry, create_bind_group, create_buffer, 
 
 
 
-struct CreateVerticesBuffers {
-    v1: wgpu::Buffer,
-    v2: wgpu::Buffer,
-    uv1: wgpu::Buffer,
-    uv2: wgpu::Buffer,
+pub struct CreateVerticesBuffers {
+    pub v1: wgpu::Buffer,
+    pub v2: wgpu::Buffer,
+    pub uv1: wgpu::Buffer,
+    pub uv2: wgpu::Buffer,
 
-    v1_out: wgpu::Buffer,
-    v2_out: wgpu::Buffer,
-    uv1_out: wgpu::Buffer,
-    uv2_out: wgpu::Buffer,
+    pub v1_out: wgpu::Buffer,
+    pub v2_out: wgpu::Buffer,
+    pub uv1_out: wgpu::Buffer,
+    pub uv2_out: wgpu::Buffer,
 
-    uniforms: wgpu::Buffer,
+    pub uniforms: wgpu::Buffer,
 }
 
-struct RenderBuffers {
-    v1: wgpu::Buffer,
-    v2: wgpu::Buffer,
-    uv1: wgpu::Buffer,
-    uv2: wgpu::Buffer,
-    uniforms: wgpu::Buffer,
-    index: wgpu::Buffer,
+pub struct RenderBuffers {
+    pub v1: wgpu::Buffer,
+    pub v2: wgpu::Buffer,
+    pub uv2: wgpu::Buffer,
+    pub uv1: wgpu::Buffer,
+    pub uniforms: wgpu::Buffer,
+    pub index: wgpu::Buffer,
 }
 
-struct BindGroups_3 {
+pub struct BindGroups3 {
     bg0:  wgpu::BindGroup,
     bg1: wgpu::BindGroup,
     bg2: wgpu::BindGroup,
@@ -43,8 +45,8 @@ pub struct Transitioner {
     pub create_vertices_buffers: CreateVerticesBuffers,
     pub render_buffers: RenderBuffers,
 
-    pub create_vertices_bind_groups: BindGroups_3,
-    pub render_bind_groups: BindGroups_3,
+    pub create_vertices_bind_groups: BindGroups3,
+    pub render_bind_groups: BindGroups3,
 
     pub num_vertices:  u32,
     pub num_indices: u32
@@ -55,8 +57,8 @@ impl Transitioner {
 
     pub fn new(
         device: &wgpu::Device,
-        vertex_creator: VertexCreator,
-        render: Render,
+        vertex_creator: &VertexCreator,
+        render: &Render,
         indices: &[u32],
         mesh_1: &[Vertex],
         mesh_2: &[Vertex],
@@ -72,12 +74,12 @@ impl Transitioner {
 
         if mesh_1.len() > mesh_2.len() {
 
-            num_vertices = (mesh_1.len() / v_size) as u32;
+            num_vertices = mesh_1.len() as u32;
 
         }
 
         else {
-            num_vertices = (mesh_2.len() / v_size) as u32;
+            num_vertices = mesh_2.len() as u32;
         }
 
         let v_total_size = (v_size as u32 * num_vertices) as u64;
@@ -85,8 +87,8 @@ impl Transitioner {
         
 
         let storage = wgpu::BufferUsages::STORAGE;
-        let storage_copysrc = wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_SRC; 
-        let uniform = wgpu::BufferUsages::UNIFORM;
+        let storage_copysrc = wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_SRC | wgpu::BufferUsages::COPY_DST; 
+        let uniform = wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST;
         let index = wgpu::BufferUsages::INDEX;
 
         let create_vertices_buffers = CreateVerticesBuffers {
@@ -103,7 +105,7 @@ impl Transitioner {
 
         };
 
-        let create_vertices_bind_groups = BindGroups_3 {
+        let create_vertices_bind_groups = BindGroups3 {
             bg0: create_bind_group(device, &vertex_creator.layout_0, 
                 &[
                     buffer_binding_entry(&create_vertices_buffers.v1, 0),
@@ -134,13 +136,13 @@ impl Transitioner {
             index: create_buffer_init(device, bytemuck::cast_slice(indices), index)
         };
 
-        let render_bind_groups = BindGroups_3 {
+        let render_bind_groups = BindGroups3 {
             bg0: create_bind_group(device, &render.layout_0, 
             &[
                 buffer_binding_entry(&render_buffers.v1, 0),
                 buffer_binding_entry(&render_buffers.v2, 1),
                 buffer_binding_entry(&render_buffers.uv1, 2),
-                buffer_binding_entry(&render_buffers.uv1, 3),
+                buffer_binding_entry(&render_buffers.uv2, 3),
             ]),
             bg1: create_bind_group(device, &render.layout_1, 
             &[
@@ -154,7 +156,6 @@ impl Transitioner {
             ])
         };
 
-        let num_indices = (indices.len() / std::mem::size_of::<u32>()) as u32;
 
         Self {
             create_vertices_bind_groups,
@@ -162,7 +163,7 @@ impl Transitioner {
             render_bind_groups,
             render_buffers,
             num_vertices,
-            num_indices
+            num_indices: indices.len() as u32
         }
 
 
@@ -172,17 +173,15 @@ impl Transitioner {
     pub fn record_create_vertices(
         &self,
         vertex_creator: &VertexCreator,
-        uniforms: &VertexCreatorUniforms,
-        queue: &wgpu::Queue,
         encoder:  &mut  wgpu::CommandEncoder,
     ) {
 
 
         vertex_creator.record(
             encoder,
-            &self.render_bind_groups.bg0,
-            &self.render_bind_groups.bg1,
-            &self.render_bind_groups.bg2,
+            &self.create_vertices_bind_groups.bg0,
+            &self.create_vertices_bind_groups.bg1,
+            &self.create_vertices_bind_groups.bg2,
             self.num_vertices,
         );
 
@@ -191,8 +190,6 @@ impl Transitioner {
     pub fn record_render(
         &self,
         render: &Render,
-        uniforms: &RenderUniforms,
-        queue: &wgpu::Queue,
         encoder: &mut wgpu::CommandEncoder,
         view: &wgpu::TextureView,
         depth_texture_view: &wgpu::TextureView,
@@ -212,4 +209,11 @@ impl Transitioner {
 
     }
 
+    pub fn update_render_uniforms(&mut self, queue: &wgpu::Queue, new_uniforms: &RenderUniforms) {
+        queue.write_buffer(&self.render_buffers.uniforms, 0, bytemuck::cast_slice(&[new_uniforms.clone()]));
+    }
+
+    pub fn update_create_vertices_uniforms(&mut self, queue: &wgpu::Queue, new_uniforms: &VertexCreatorUniforms) {
+        queue.write_buffer(&self.create_vertices_buffers.uniforms, 0, bytemuck::cast_slice(&[new_uniforms.clone()]));
+    }
 }

@@ -33,7 +33,7 @@ impl Camera {
             eye: Vec3::new(0.0, 0.0, 0.0),
             target: Vec3::new(0.0, 0.0, 0.0),
             up: Vec3::Y,
-            aspect: (size.width / size.height) as f32,
+            aspect: (size.width as f32/ size.height as f32),
             fov: 45.0_f32.to_radians(),
             znear:  1e-3,
             zfar: 1e3,

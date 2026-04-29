@@ -133,21 +133,21 @@ pub fn create_bind_group(device: &wgpu::Device, layout: &wgpu::BindGroupLayout, 
 
 }
 
-pub fn buffer_binding_entry( buffer: &wgpu::Buffer , binding: u32 ) -> wgpu::BindGroupEntry {
+pub fn buffer_binding_entry( buffer: &wgpu::Buffer , binding: u32 ) -> wgpu::BindGroupEntry<'_> {
 
     wgpu::BindGroupEntry { binding, resource: buffer.as_entire_binding() }
     
 
 }
 
-pub fn texture_binding_entry( view: &wgpu::TextureView , binding: u32 ) -> wgpu::BindGroupEntry {
+pub fn texture_binding_entry( view: &wgpu::TextureView , binding: u32 ) -> wgpu::BindGroupEntry<'_> {
 
     wgpu::BindGroupEntry { binding, resource: wgpu::BindingResource::TextureView(view) }
     
 
 }
 
-pub fn sampler_binding_entry ( sampler: &wgpu::Sampler, binding: u32) -> wgpu::BindGroupEntry {
+pub fn sampler_binding_entry ( sampler: &wgpu::Sampler, binding: u32) -> wgpu::BindGroupEntry<'_> {
     wgpu::BindGroupEntry { binding, resource: wgpu::BindingResource::Sampler(sampler) }
 }
 

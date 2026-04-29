@@ -56,9 +56,9 @@ impl UV {
 #[derive(Zeroable, Pod, Clone, Copy)]
 pub struct VertexCreatorUniforms {
 
-    num_vertices: u32,
-    len_1: u32,
-    len_2: u32,
+    pub num_vertices: u32,
+    pub len_1: u32,
+    pub len_2: u32,
     _pad1: u32,
 
 }
@@ -84,9 +84,9 @@ impl VertexCreatorUniforms {
 #[repr(C)]
 #[derive(Zeroable, Pod, Clone, Copy)]
 pub struct RenderUniforms {
-    mvp: [ [f32; 4]; 4 ],
-    light_source: [f32; 3],
-    transition_percentage: f32
+    pub mvp: [ [f32; 4]; 4 ],
+    pub light_source: [f32; 3],
+    pub transition_percentage: f32
 }
 
 impl RenderUniforms {

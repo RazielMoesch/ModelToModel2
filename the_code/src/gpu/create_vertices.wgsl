@@ -1,36 +1,20 @@
-
-
-
-
-
-
-
-
-
-
 struct Vertex {
-
     pos: vec3<f32>,
     _pad1: f32,
     normal: vec3<f32>,
     _pad2: f32,
-
 };
 
 struct UV {
-
     uv: vec2<f32>,
     _pad1: vec2<f32>
-
 };
 
 struct Uniforms {
-
     num_vertices: u32,
     len_1: u32,
     len_2: u32,
     _pad1: u32
-
 };
 
 // In
@@ -51,37 +35,41 @@ struct Uniforms {
 @compute @workgroup_size(64)
 fn main(@builtin(global_invocation_id) id: vec3<u32>) {
 
-    
-
     let gid = id.x;
 
-    if ( gid >= uniforms.num_vertices ) { return; }
+    if (gid >= uniforms.num_vertices) { return; }
 
-    if ( uniforms.len_1 > uniforms.len_2 ) {
+    let num_triangles_out = uniforms.num_vertices / 3u;
+    let triangle_idx = gid / 3u;
+    let vertex_in_triangle = gid % 3u;
 
-        let r = f32(uniforms.len_2) / f32(uniforms.len_1);
-        let idx = u32(f32(gid) * r);
+    if (uniforms.len_1 >= uniforms.len_2) {
+
+        let num_triangles_2 = uniforms.len_2 / 3u;
+        let src_triangle_2 = min(
+            u32(f32(triangle_idx) * f32(num_triangles_2) / f32(num_triangles_out)),
+            num_triangles_2 - 1u
+        );
 
         vertices_1_out[gid] = vertices_1[gid];
         uv_1_out[gid] = uv_1[gid];
 
-        vertices_2_out[gid] = vertices_2[idx];
-        uv_2_out[gid] = uv_2[idx];
+        vertices_2_out[gid] = vertices_2[src_triangle_2 * 3u + vertex_in_triangle];
+        uv_2_out[gid] = uv_2[src_triangle_2 * 3u + vertex_in_triangle];
 
-    }
+    } else {
 
-    else {
-        let r = f32(uniforms.len_1) / f32(uniforms.len_2);
-        let idx = u32(f32(gid) * r);
+        let num_triangles_1 = uniforms.len_1 / 3u;
+        let src_triangle_1 = min(
+            u32(f32(triangle_idx) * f32(num_triangles_1) / f32(num_triangles_out)),
+            num_triangles_1 - 1u
+        );
 
-        vertices_1_out[gid] = vertices_1[idx];
-        uv_1_out[gid] = uv_1[idx];
+        vertices_1_out[gid] = vertices_1[src_triangle_1 * 3u + vertex_in_triangle];
+        uv_1_out[gid] = uv_1[src_triangle_1 * 3u + vertex_in_triangle];
 
         vertices_2_out[gid] = vertices_2[gid];
         uv_2_out[gid] = uv_2[gid];
+
     }
-
-
-
-
 }
