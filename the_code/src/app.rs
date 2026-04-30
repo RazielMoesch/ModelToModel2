@@ -1,4 +1,5 @@
 use std::sync::Arc;
+use std::time::Instant;
 use wgpu::CurrentSurfaceTexture;
 use winit::{
     application::ApplicationHandler,
@@ -33,6 +34,9 @@ pub struct AppState {
     pub camera: Camera,
     pub is_dragging: bool,
     pub is_panning: bool,
+    pub last_frame_inst: Instant,
+    pub accumulated_time: f32,
+    pub paused: bool,
 }
 
 impl AppState {
@@ -83,7 +87,7 @@ impl AppState {
 
         let size = PhysicalSize::new(engine.config.width, engine.config.height);
         let camera = Camera::new(size);
-        let render_uniforms = RenderUniforms::new(camera.matrix().to_cols_array_2d(), [1.0, 1.0, 1.0], 0.0);
+        let render_uniforms = RenderUniforms::new(camera.matrix().to_cols_array_2d(), [1.0, 80.0, 1.0], 0.0);
 
         Self {
             engine,
@@ -97,6 +101,9 @@ impl AppState {
             camera,
             is_dragging: false,
             is_panning: false,
+            last_frame_inst: Instant::now(),
+            accumulated_time: 0.0,
+            paused: false,
         }
     }
 
@@ -229,33 +236,50 @@ impl ApplicationHandler for App {
                     self.window.as_ref().unwrap().request_redraw();
                 }
             }
-            WindowEvent::KeyboardInput { event: key_event, .. } => {
-                if key_event.state == ElementState::Pressed {
+            WindowEvent::KeyboardInput{ event, .. } => {
+                if event.state == ElementState::Pressed {
                     if let Some(state) = self.state.as_mut() {
-                        let step = 0.05;
-                        match key_event.logical_key {
-                            winit::keyboard::Key::Named(winit::keyboard::NamedKey::ArrowRight) => {
-                                state.update_transition_percentage(state.transition_percentage + step);
-                                self.window.as_ref().unwrap().request_redraw();
+                        if event.logical_key == winit::keyboard::Key::Named(winit::keyboard::NamedKey::Space) {
+                            state.paused = !state.paused;
+                            if !state.paused {
+                                state.last_frame_inst = Instant::now();
                             }
-                            winit::keyboard::Key::Named(winit::keyboard::NamedKey::ArrowLeft) => {
-                                state.update_transition_percentage(state.transition_percentage - step);
-                                self.window.as_ref().unwrap().request_redraw();
-                            }
-                            _ => {}
                         }
                     }
                 }
             }
+
             WindowEvent::RedrawRequested => {
                 if let Some(state) = self.state.as_mut() {
+                    let now = Instant::now();
+                    let dt = now.duration_since(state.last_frame_inst).as_secs_f32();
+                    state.last_frame_inst = now;
+
+                    if !state.paused {
+                        state.accumulated_time = (state.accumulated_time + dt) % 4.0;
+                    }
+
+                    let t = if state.accumulated_time < 1.0 {
+                        0.0
+                    } else if state.accumulated_time < 2.0 {
+                        let x = state.accumulated_time - 1.0;
+                        x * x * (3.0 - 2.0 * x)
+                    } else if state.accumulated_time < 3.0 {
+                        1.0
+                    } else {
+                        let x = 1.0 - (state.accumulated_time - 3.0);
+                        x * x * (3.0 - 2.0 * x)
+                    };
+                    
+                    state.update_transition_percentage(t);
+
                     let output = match state.engine.surface.get_current_texture() {
                         CurrentSurfaceTexture::Success(texture) => texture,
                         _ => return,
                     };
                     let view = output.texture.create_view(&wgpu::TextureViewDescriptor::default());
                     let mut encoder = state.engine.device.create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
-                    
+
                     state.transitioner.record_create_vertices(&state.vertex_creator, &mut encoder);
 
                     let v_total_size = state.transitioner.create_vertices_buffers.v1_out.size();
@@ -271,9 +295,11 @@ impl ApplicationHandler for App {
 
                     state.transitioner.update_render_uniforms(&state.engine.queue, &state.render_uniforms);
                     state.transitioner.record_render(&state.render, &mut encoder, &view, &state.depth_view);
-                    
+
                     state.engine.queue.submit(std::iter::once(encoder.finish()));
                     output.present();
+
+                    self.window.as_ref().unwrap().request_redraw();
                 }
             }
             WindowEvent::Resized(new_size) => {

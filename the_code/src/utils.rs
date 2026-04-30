@@ -1,9 +1,29 @@
-
-
+use glam::Vec3;
 
 use crate::gpu::resources::{UV, Vertex};
 
+fn center_and_scale(vertices: Vec<Vertex>) -> Vec<Vertex> {
+    if vertices.is_empty() { return vertices; }
 
+    let mut min = Vec3::splat(f32::MAX);
+    let mut max = Vec3::splat(f32::MIN);
+
+    for v in &vertices {
+        let p = Vec3::from(v.pos);
+        min = min.min(p);
+        max = max.max(p);
+    }
+
+    let center = (min + max) * 0.5;
+    let extent = (max - min).max_element();
+    let scale = if extent > 0.0 { 2.0 / extent } else { 1.0 };
+
+    vertices.into_iter().map(|mut v| {
+        let p = (Vec3::from(v.pos) - center) * scale;
+        v.pos = p.to_array();
+        v
+    }).collect()
+}
 
 pub fn normalize(vertices: Vec<Vertex>) -> Vec<Vertex> {
     let mut max_dist: f32 = 0.0;
@@ -21,7 +41,6 @@ pub fn normalize(vertices: Vec<Vertex>) -> Vec<Vertex> {
         v
     }).collect()
 }
-
 
 pub fn load_glb(path: &str) -> (Vec<Vertex>, Vec<UV>, Vec<u32>, Vec<u8>, u32, u32) {
     println!("[Loader] Loading file: {}", path);
@@ -53,8 +72,6 @@ pub fn load_glb(path: &str) -> (Vec<Vertex>, Vec<UV>, Vec<u32>, Vec<u8>, u32, u3
         .into_u32()
         .collect();
 
-    // Unroll: one vertex per index, so vertex[i] corresponds to index[i] = i
-    // This means positions, normals, and UVs are all indexed by the SAME index buffer
     let mut vertices = Vec::with_capacity(indices_raw.len());
     let mut uvs = Vec::with_capacity(indices_raw.len());
 
@@ -64,10 +81,10 @@ pub fn load_glb(path: &str) -> (Vec<Vertex>, Vec<UV>, Vec<u32>, Vec<u8>, u32, u3
         uvs.push(UV::new(uvs_src[idx]));
     }
 
-    // Sequential indices since we unrolled
+    let vertices = center_and_scale(vertices);
+
     let indices: Vec<u32> = (0..vertices.len() as u32).collect();
 
-    // Texture
     let image = images.get(0).expect("No texture found in GLB");
     let width = image.width;
     let height = image.height;
@@ -91,6 +108,7 @@ pub fn load_glb(path: &str) -> (Vec<Vertex>, Vec<UV>, Vec<u32>, Vec<u8>, u32, u3
         path, vertices.len(), indices.len());
     (vertices, uvs, indices, pixels, width, height)
 }
+
 pub fn create_texture(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
